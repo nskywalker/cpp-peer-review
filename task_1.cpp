@@ -51,6 +51,17 @@ int IntentReading::GetFirstNumberFromInput(std::string_view& str) {
     }
 }
 
+void ReadRequest(std::string_view& request_view, IntentReading& reading) {
+    int user = IntentReading::GetFirstNumberFromInput(request_view);
+    int page = IntentReading::GetFirstNumberFromInput(request_view);
+    reading.SavePageUser(user, page);
+}
+
+void CheerRequest(std::string_view& request_view, IntentReading& reading) {
+    int user = IntentReading::GetFirstNumberFromInput(request_view);
+    std::cout << std::setprecision(6) << reading.CheerUser(user) << std::endl;
+}
+
 void process(std::istream& in) {
     IntentReading reading;
     std::string request;
@@ -62,13 +73,10 @@ void process(std::istream& in) {
         request_view = request;
         if (request_view.substr(0, 4) == "READ") {
             request_view.remove_prefix(5);
-            int user = IntentReading::GetFirstNumberFromInput(request_view);
-            int page = IntentReading::GetFirstNumberFromInput(request_view);
-            reading.SavePageUser(user, page);
+            ReadRequest(request_view, reading);
         } else if (request_view.substr(0, 5) == "CHEER") {
             request_view.remove_prefix(6);
-            int user = IntentReading::GetFirstNumberFromInput(request_view);
-            std::cout << std::setprecision(6) << reading.CheerUser(user) << std::endl;
+            CheerRequest(request_view, reading);
         } else {
             throw std::invalid_argument("Denied request");
         }
